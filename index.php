@@ -46,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Caveat:wght@500&display=swap" rel="stylesheet">
   <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <title>Chat Anonim</title>
@@ -165,10 +167,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <!-- Footer -->
   <footer class="bg-gray-800 text-white py-6">
-    <div class="max-w-7xl mx-auto px-6  items-center">
-      <h2 class="text-center text-xl">Created by Evan👑</h2>
+    <div class="max-w-7xl mx-auto px-6 flex flex-col items-center space-y-4">
+        <h2 class="text-center text-xl">Created by Evan👑</h2>
+        <div class="flex space-x-6">
+
+            <!-- Link ke Instagram -->
+            <a href="https://www.instagram.com/n4ve.666/" target="_blank" class="text-white hover:text-pink-500 transition">
+                <i class="fab fa-instagram fa-lg"></i>
+            </a>
+
+            <!-- Link ke GitHub -->
+            <a href="https://github.com/newbiema" target="_blank" class="text-white hover:text-gray-400 transition">
+                <i class="fab fa-github fa-lg"></i>
+            </a>
+        </div>
     </div>
-  </footer>
+</footer>
+
 
   <script>
     <?php if (isset($_SESSION['message'])): ?>

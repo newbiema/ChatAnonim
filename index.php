@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <section class="relative bg-gray-900 text-white py-16">
   <div class="absolute inset-0 bg-gradient-to-r from-indigo-900 to-gray-900 opacity-75"></div>
   <div class="relative max-w-4xl mx-auto text-center">
-    <h1 class="text-5xl font-bold mb-6 text-indigo-400">Sampaikan Pesan Tanpa Nama</h1>
+    <h1 class="text-5xl font-bold mb-6 text-indigo-400">Tinggalkan Pesan Tanpa Nama</h1>
     <p class="text-lg text-gray-300 mb-8">
       Dalam dunia penuh misteri, kini kamu bisa menyampaikan pesan tanpa meninggalkan jejak. 
       Berikan pesanmu dan biarkan ia berbicara untukmu!
@@ -139,13 +139,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 
-<!-- Daftar Pesan -->
 <section class="mb-8 bg-gray-900 p-6 rounded-lg shadow-custom">
   <h2 class="text-3xl font-semibold mb-4 text-center">Pesan Rahasia</h2>
   <?php if ($result->num_rows > 0): ?>
     <div class="space-y-6">
       <?php while ($row = $result->fetch_assoc()): ?>
-        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105">
+        <div class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105 break-words">
           <div class="flex justify-between items-center mb-2">
             <p class="font-semibold text-lg text-indigo-400"><?= htmlspecialchars($row['nama']); ?></p>
             <p class="text-sm text-gray-400"><?= htmlspecialchars($row['tanggal']); ?></p>
@@ -153,7 +152,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <p class="text-sm text-gray-300 mb-2">
             <span class="font-semibold text-indigo-400">Kepada:</span> <?= htmlspecialchars($row['kepada'] ?? 'Tidak disebutkan'); ?>
           </p>
-          <p class="mt-2 text-gray-200"><?= htmlspecialchars($row['komentar']); ?></p>
+          <p class="mt-2 text-gray-200 break-words"><?= htmlspecialchars($row['komentar']); ?></p>
+          
+          <!-- Balasan -->
+          <?php if (!empty($row['balasan'])): ?>
+            <div class="mt-4 p-4 bg-gray-700 rounded-lg text-gray-300 break-words">
+              <p><span class="font-semibold text-indigo-400">Balasan:</span> <?= htmlspecialchars($row['balasan']); ?></p>
+            </div>
+          <?php endif; ?>
+
+          <!-- Form untuk Balas Pesan -->
+          <form action="balas_pesan.php" method="POST" class="mt-4 space-y-2">
+            <input type="hidden" name="id_pesan" value="<?= $row['id']; ?>">
+            <textarea name="balasan" rows="3" required placeholder="Tulis balasan Anda..."
+              class="w-full p-3 border border-gray-700 rounded-lg bg-gray-800 text-gray-200 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            <button type="submit"
+              class="bg-gradient-to-r from-indigo-500 to-purple-700 text-white py-2 px-4 rounded-lg shadow hover:shadow-lg transform hover:scale-105 transition">
+              Kirim Balasan
+            </button>
+          </form>
         </div>
       <?php endwhile; ?>
     </div>
@@ -161,6 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <p class="text-gray-500 text-center">Belum ada pesan yang dikirim.</p>
   <?php endif; ?>
 </section>
+
 
 
   </div>
@@ -186,6 +204,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   <script>
+  <?php if (isset($_SESSION['message'])): ?>
+    Swal.fire({
+      title: 'Berhasil!',
+      text: '<?php echo $_SESSION['message']; ?>',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    });
+    <?php unset($_SESSION['message']); ?>
+  <?php endif; ?>
+
+
     <?php if (isset($_SESSION['message'])): ?>
       Swal.fire({
         title: 'Pesan Terkirim!',
@@ -196,6 +225,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <?php unset($_SESSION['message']); ?>
     <?php endif; ?>
   </script>
+
+  <!-- JavaScript untuk smooth scroll -->
+<script>
+    const scrollLinks = document.querySelectorAll('a[href^="#"]');
+    
+    scrollLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+
+            targetElement.scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
 
 </body>
 </html>
